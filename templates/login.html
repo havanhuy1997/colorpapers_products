@@ -1,0 +1,42 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+
+    <title>PRODUCTS INTERNAL</title>
+
+    <link rel="canonical" href="">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://getbootstrap.com/docs/4.0/examples/sign-in/signin.css" rel="stylesheet">
+  </head>
+
+  <body class="text-center">
+    <form action="" method="POST" class="form-signin">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+     
+      {% csrf_token %}
+      {{form.as_p}}
+     
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <p class="mt-5 mb-3 text-muted">&copy; All Rights Reserved</p>
+    </form>
+  </body>
+
+  <script>
+    var element = document.getElementById("id_username");
+ element.classList.add("form-control");
+    var element = document.getElementById("id_password");
+ element.classList.add("form-control");
+    var new_element = document.getElementsByTagName("label");
+ new_element.classList.add("label_float_left");
+   </script>
+</html>
