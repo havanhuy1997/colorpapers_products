@@ -1,24 +1,24 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
-from django.views import View
+from django.views.generic.edit import FormView
 from dashboard.models import * 
+from dashboard.forms import addTaskForm
 
-class dashboardView(View):
+class dashboardView(FormView):
+    template_name = 'dashboard.html'
+    form_class = addTaskForm
+    success_url = '/'
     
-    def __init__(self, **kwargs):
-        self.template_name = {
-            'main': "dashboard.html",
-        }
-
     def dispatch(self, request, *args, **kwargs):
         return super(self.__class__, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request, **kwargs):
-        page_type = 'main'
-        context_dict = {
-            "recent_process": processExecutions.objects.all().order_by('-id')[:100]
-        }
+    def get_context_data(self, **kwargs):
+        context = super(self.__class__, self).get_context_data(**kwargs)
+        context['recent_process']= processExecutions.objects.all().order_by('-id')[:100]
+        return context
 
-        return render(request, self.template_name[page_type], context_dict)
-        # return HttpResponseRedirect(reverse('dashboard:opportunities'))
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.save()
+        return super(self.__class__, self).form_valid(form)

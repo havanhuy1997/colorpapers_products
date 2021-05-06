@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class processExecutions(models.Model):
 
+
     _STATUS_CHOICES = (
         ('pending', 'pending'),
         ('running', 'running'),
@@ -16,20 +17,20 @@ class processExecutions(models.Model):
     process_title = models.CharField(
         _('Process Title'),
         max_length=254, 
-        help_text=_('Text Field, 254, Characters.')
+        help_text=_('Process title only for regonization, Try to use unique name')
         )
 
     node_id = models.CharField(
         _('Node ID'),
-        max_length=254, 
-           blank=True,
-        null=True,
+        max_length=254,
+         help_text=_('Node id of Amazon Category For Marketplace')
     )
     node_type = models.CharField(
         _('Node Type'),
         max_length=254, 
         choices=_CATEGORY_CHOICES, 
-        default='root'
+        default='root',
+        help_text=_('Select Root is category is Main and select child if node id is sub category of any Category')
     )
     start_time = models.DateTimeField(
         _('Started At'),

@@ -17,7 +17,11 @@
 
     <!-- Custom styles for this template -->
     <link href="https://getbootstrap.com/docs/4.0/examples/dashboard/dashboard.css" rel="stylesheet">
-  </head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
+
+
+</head>
 
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
@@ -39,20 +43,16 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
+            <h1 class="h2">Products Data ({{data_count}})</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <!-- <button class="btn btn-sm btn-outline-secondary">Share</button> -->
-                <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">Create New Process</button> 
+                <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+                <input type="button" class="btn btn-info" value="Search"/>&nbsp;
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">Filter</button>
               </div>
-              <!-- <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button> -->
             </div>
           </div>
 
-          <!-- <canvas class="my-4" id="myChart" width="900" height="380"></canvas> -->
 
           <h2>Execution Process</h2>
           <div class="table-responsive">
@@ -61,68 +61,70 @@
                 <tr>
                   <th>#</th>
                   <th>Title</th>
-                  <th>Node ID</th>
-                  <th>Node Type</th>
-                  <th>Started At</th>
-                  <th>Completed At</th>
-                  <th>status</th>
+                  <th>ASIN</th>
+                  <th>Type</th>
+                  <th>Model</th>
+                  <th>manufacturer</th>
                   <th>Action</th>
 
                 </tr>
               </thead>
               <tbody>
-                  {% for row in recent_process %}
+                {% for row in results %}
                 <tr>
-                  <td>{{row.id}}</td>
-                  <td>{{row.process_title}}</td>
-                  <td>{{row.node_id}}</td>
-                  <td>{{row.node_type}}</td>
-                  <td>{{row.start_time}}</td>
-                  <td>{{row.completed_at}}</td>
-                  <td>{{row.status}}</td>
+                  <td></td>
+                  <td>{{row.title}}</td>
+                  <td>{{row.asin}}</td>
+                  <td>{{row.type}}</td>
+                  <td>{{row.model}}</td>
+                  <td>{{row.manufacturer}}</td>
                   <td>
-                      <a>
+                      <a href="/data-view/{{row.id}}">
                           <button class="btn btn-info btn-sm">View Data</button>
                       </a>
                   </td>
                 </tr>
                 {% endfor %}
-                
               </tbody>
             </table>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+              </nav>
           </div>
         </main>
       </div>
-    </div>
-
-       
+    </div>      
       <!-- Modal -->
       <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Create New Process</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Filter Data</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form action="" method="POST">
-              {% csrf_token %}
             <div class="modal-body">
-             
-              {{form.as_p}}
+                
+                <label>Sort by Node:</label>
+                <select class="form-control selectpicker" data-live-search="true">
+                    <option data-tokens="0">----</option>
+                    {% for node in nodes_list %}
+                    <option data-tokens="{{node}}">{{node}}</option>
+                    {% endfor %}
+                   
+                  </select>
                   
-              
+                <br/>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <!-- <button type="button" class="btn btn-primary">Submit</button> -->
-              <input type="submit" class="btn btn-primary" value="Submit"/>
-              <br/>
-             
+              <button type="button" class="btn btn-primary">Search</button>
             </div>
-          </form>
-            <span style="font-size: small;" ><b>Note:</b> Once you submit the request if no another process is running, this will start immediately</span>
           </div>
         </div>
       </div>
@@ -139,18 +141,8 @@
     <script>
       feather.replace()
     </script>
-
-   
-<script>
-  var element = document.getElementById("id_process_title");
-  element.classList.add("form-control");
-  var element = document.getElementById("id_node_id");
-  element.classList.add("form-control");
-
-var element = document.getElementById("id_node_type");
-  element.classList.add("form-control");
-
-
- </script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
+    
   </body>
 </html>

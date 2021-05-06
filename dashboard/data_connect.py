@@ -1,6 +1,9 @@
 from pymongo import MongoClient
 
 
-client = MongoClient()
-db = client.KEEPA_DATA
-product_col = db.products_data
+class DATABASE:
+
+    def __init__(self):
+        client = MongoClient()
+        db = client.KEEPA_DATA
+        self.product_col = db.products_data
