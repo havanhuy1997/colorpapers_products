@@ -45,14 +45,13 @@ class productDataView(View):
             find_dict.update({
                 "$text": {"$search": search_text}
             })
-
-
-
         if page_no == 1:
             data_results = self.MONGOOBJ.product_col.find(find_dict).limit(settings.VIEW_PAGE_LIMIT)
         else:
             skip_count = page_no*settings.VIEW_PAGE_LIMIT
             data_results = self.MONGOOBJ.product_col.find(find_dict).skip(skip_count).limit(settings.VIEW_PAGE_LIMIT)
+
+
         context_dict = {
             "results": data_results,
             "data_count": self.MONGOOBJ.product_col.find(find_dict).count(),

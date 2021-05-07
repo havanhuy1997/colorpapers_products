@@ -43,6 +43,18 @@ class KEEPA_QUERIES:
             catag_type = False
         initialRowDict = self.loadDataDict(node_id, catag_type, self.PAGE_NO_ACTIVE)
         self.fetchData(initialRowDict)
+        # time.sleep(60)
+        if self.PRODUCT_SIZE_LIMIT is not None:
+            total_page_to_range = int(self.PRODUCT_SIZE_LIMIT/self.PER_PAGE_LIMIT)+1
+            for i in range(1, total_page_to_range+1):
+                generateRowDict = self.loadDataDict(node_id, catag_type, i)
+                self.fetchData(initialRowDict)
+                # print("SLEEPING FOR 2 minutes")
+                # time.sleep(180)
+        self.EXECUTION_OBJ.completed_at = datetime.now()
+        self.EXECUTION_OBJ.status = 'completed'
+        self.EXECUTION_OBJ.updated_at = datetime.now()
+        self.EXECUTION_OBJ.save()
 
     def fetchData(self, search_dict):
         encoded_data = urllib.parse.quote_plus(str(json.dumps(search_dict)))
@@ -52,9 +64,10 @@ class KEEPA_QUERIES:
         asin_list = data['asinList']
         self.TOKEN_LEFT = data['tokensLeft']
         self.PRODUCT_SIZE_LIMIT = data['totalResults']
+        if int(self.TOKEN_LEFT) < 50:
+            print("SLEEPING FOR 30 minutes")
+            # time.sleep(1800)
         self.iterateAsinProducts(asin_list)
-        
-    
 
     def iterateAsinProducts(self, asinList):
         for asin in asinList:
@@ -72,9 +85,10 @@ class KEEPA_QUERIES:
                     "date_created": datetime.now()
                 })
                 self.MONGOOBJ.product_col.insert_one(product_json_object)
+                print("PRODUCT INSERTED>>", product_json_object['asin'])
                 self.EXECUTION_OBJ.updated_at = datetime.now()
                 self.EXECUTION_OBJ.save()
-
+            print("SLEEPING FOR 1 seconds")
             time.sleep(1)
 
         
