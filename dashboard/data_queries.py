@@ -53,6 +53,7 @@ class KEEPA_QUERIES:
         self.TOKEN_LEFT = data['tokensLeft']
         self.PRODUCT_SIZE_LIMIT = data['totalResults']
         self.iterateAsinProducts(asin_list)
+        
     
 
     def iterateAsinProducts(self, asinList):
@@ -71,6 +72,9 @@ class KEEPA_QUERIES:
                     "date_created": datetime.now()
                 })
                 self.MONGOOBJ.product_col.insert_one(product_json_object)
+                self.EXECUTION_OBJ.updated_at = datetime.now()
+                self.EXECUTION_OBJ.save()
+
             time.sleep(1)
 
         

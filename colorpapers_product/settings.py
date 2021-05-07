@@ -132,3 +132,4 @@ PER_PAGE_RECORD_LIMIT = 100
 KEEPA_API_PREFIX = """https://api.keepa.com/query?key={}&domain={}&selection={}"""
 KEEPA_API = """https://api.keepa.com"""
 DOMAIN_MARKET = 10 # india Reference [ 1: com | 2: co.uk 26 | 3: de | 4: fr | 5: co.jp | 6: ca | 8: it | 9: es | 10: in | 11: com.mx ]
+VIEW_PAGE_LIMIT = 200

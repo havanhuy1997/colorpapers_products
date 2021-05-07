@@ -1,4 +1,5 @@
 
+{% load load_mongo_id %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -35,20 +36,19 @@
     </nav>
 
     <div class="container-fluid">
-
-
-        
       <div class="row">
             {% include "left_menu.html" %}
-
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2">Products Data ({{data_count}})</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
-                <input type="button" class="btn btn-info" value="Search"/>&nbsp;
-                <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">Filter</button>
+                <form action="" method="GET">
+                    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" name="q" aria-label="Search" required>
+              
+                <input type="submit" class="btn btn-info" value="Search"/>&nbsp;
+              </form>
+                <button type="submit" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">Filter</button>
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@
                   <td>{{row.model}}</td>
                   <td>{{row.manufacturer}}</td>
                   <td>
-                      <a href="/data-view/{{row.id}}">
+                      <a href="/data-view/{{row|private}}" target="_blank">
                           <button class="btn btn-info btn-sm">View Data</button>
                       </a>
                   </td>
@@ -89,9 +89,11 @@
             </table>
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                  {% if previous_page %}
+                  <li class="page-item"><a class="page-link" href="/products-data/?page={{previous_page}}">Previous</a></li>
+                  {% endif  %}
+                  <li class="page-item"><a class="page-link" href="#">{{current_page}}</a></li>
+                  <li class="page-item"><a class="page-link" href="/products-data/?page={{next_page}}">Next</a></li>
                 </ul>
               </nav>
           </div>
@@ -108,11 +110,11 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+            <form action="" method="get">
             <div class="modal-body">
                 
                 <label>Sort by Node:</label>
-                <select class="form-control selectpicker" data-live-search="true">
-                    <option data-tokens="0">----</option>
+                <select class="form-control selectpicker" name="node_key" data-live-search="true">
                     {% for node in nodes_list %}
                     <option data-tokens="{{node}}">{{node}}</option>
                     {% endfor %}
@@ -123,8 +125,11 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Search</button>
+              <!-- <button type="button" class="btn btn-primary">Search</button> -->
+
+              <input type="submit" class="btn btn-primary" value="Search"/>
             </div>
+          </form>
           </div>
         </div>
       </div>
