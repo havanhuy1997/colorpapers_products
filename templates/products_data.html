@@ -51,7 +51,7 @@
               </form>
               <br/>
                 <a><button class="btn btn-warning" style="margin-left: 10px !important;" data-toggle="modal" data-target="#exampleModal">FILTER</button></a>
-                <a><button class="btn btn-success" style="margin-left: 10px !important;">EXPORT DATA</button></a>
+                <a href="/export-data/{{request|export_slug_key}}/?q={{request|export_slug_value}}"><button class="btn btn-success" style="margin-left: 10px !important;">EXPORT DATA</button></a>
               </div>
             </div>
           </div>

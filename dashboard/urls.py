@@ -8,4 +8,5 @@ urlpatterns = [
     path(r'',  login_required(dashboardView.as_view()), name='dashboard_page'),
     re_path(r'products-data/$', login_required(productDataView.as_view()), name='products'),
     path(r'data-view/<slug:data_id>/', login_required(productDetailView.as_view()), name='product_detail'),
+    path(r'export-data/<slug:filter_type>/', login_required(productExportView.as_view()), name='export_data'),
 ]

@@ -6,6 +6,8 @@ from dashboard.models import *
 from dashboard.data_connect import DATABASE as mongo
 from bson.objectid import ObjectId
 from django.conf import settings
+import pandas as pd, uuid
+from datetime import datetime
 
 class productDataView(View):
     
@@ -80,9 +82,46 @@ class productDetailView(View):
         res = self.MONGOOBJ.product_col.find({'_id': ObjectId(data_id)})
         if int(res.count()) > 0:
             data_results = res[0]
+            csv_data = data_results['csv']
             del data_results['csv']
+            data_results.update({
+                "csv": csv_data
+            })
         context_dict = {
             "results": data_results,
         }
 
         return render(request, self.template_name[page_type], context_dict)
+
+class productExportView(View):
+    def __init__(self, **kwargs):
+        self.MONGOOBJ = mongo()
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(self.__class__, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, filter_type, **kwargs):
+
+        try:
+            filter_value = self.request.GET['q']
+        except:
+            filter_value = ""
+
+
+        filter_dict = {}
+        excluded_fields = {"csv":0,"salesRanks":0,"execution_id":0}
+
+        if int(filter_type) == 1:
+            filter_dict.update({'execution_node_id': str(filter_value)})
+
+        if int(filter_type) == 2:
+            filter_dict.update({
+                "$text": {"$search": str(filter_value)}
+            })
+
+        file_name = str(datetime.now()).replace(" ","_")+"__"+str(uuid.uuid4()).replace("-","")+".csv"
+        df = pd.DataFrame(list(self.MONGOOBJ.product_col.find(filter_dict, excluded_fields)))
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+        df.to_csv(path_or_buf=response, index=False)
+        return response
