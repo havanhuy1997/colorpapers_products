@@ -45,6 +45,7 @@ class KEEPA_QUERIES:
         self.fetchData(initialRowDict)
         # time.sleep(60)
         if self.PRODUCT_SIZE_LIMIT is not None:
+            print(self.PRODUCT_SIZE_LIMIT, "_____________ PRODUCT_SIZE_LIMIT")
             total_page_to_range = int(self.PRODUCT_SIZE_LIMIT/self.PER_PAGE_LIMIT)+1
             for i in range(1, total_page_to_range+1):
                 generateRowDict = self.loadDataDict(node_id, catag_type, i)
@@ -61,22 +62,61 @@ class KEEPA_QUERIES:
         url = self.URL_PREFIX.format(self.DATA_KEY, self.TARGET_MARKET, encoded_data)
         con = requests.get(url)
         data = json.loads(con.content)
-        asin_list = data['asinList']
+        print("FETCHDATA>>")
+        print(data)
+
         self.TOKEN_LEFT = data['tokensLeft']
-        self.PRODUCT_SIZE_LIMIT = data['totalResults']
-        if int(self.TOKEN_LEFT) < 50:
-            print("SLEEPING FOR 30 minutes")
-            # time.sleep(1800)
-        self.iterateAsinProducts(asin_list)
+
+        if "asinList" not in list(data.keys()):
+            if self.TOKEN_LEFT < 50:
+                refillIn = int(int(data['refillIn'])/1000)
+                refillIn = refillIn+10
+                for i in range(refillIn):
+                    print("RE-START FETCH IN ", str(refillIn-i), " Seconds")
+                    time.sleep(1)
+                # i = 0 
+                self.fetchData(search_dict)
+        else:
+            asin_list = data['asinList']
+            self.PRODUCT_SIZE_LIMIT = data['totalResults']
+            self.iterateAsinProducts(asin_list)
+
 
     def iterateAsinProducts(self, asinList):
+        done_asin_list = []
         for asin in asinList:
             if int(self.MONGOOBJ.product_col.find({'asin': asin}).count()) > 0:
+                print("ALREADY IN DB SO SKIPPED...", asin)
                 continue
-            url = settings.KEEPA_API+"/product?key={}&domain={}&asin={}".format(self.DATA_KEY, self.TARGET_MARKET, asin)
+            if asin in done_asin_list:
+                continue
+            USE_DELAY = False
+            asin_result, USE_DELAY, refillIn = self.getAsinProducts(asin)
+            if asin_result is not None:
+                done_asin_list.append(asin)
+            if USE_DELAY is True:
+                for i in range(refillIn):
+                    print("RE-START PRODUCTS IN ", str(refillIn-i), " Seconds")    
+                    time.sleep(1)
+                asinList.append(asin)      
+        
+    def getAsinProducts(self, asin):
+        url = settings.KEEPA_API+"/product?key={}&domain={}&asin={}".format(self.DATA_KEY, self.TARGET_MARKET, asin)
+        asin_success = False
+        USE_DELAY = False
+        refillIn = 0
+        try:
             con = requests.get(url)
             response = json.loads(con.content)
+            if "tokensLeft" in response.keys():
+                print("RESPONSE PRODUCT")
+                print(response)
+                if int(response['tokensLeft']) < 50:
+                    refillIn = int(int(response['refillIn'])/1000)
+                    refillIn = refillIn+10
+                    USE_DELAY = True
             product = response['products']
+
             if len(product) > 0:
                 product_json_object = product[0]
                 product_json_object.update({
@@ -88,9 +128,12 @@ class KEEPA_QUERIES:
                 print("PRODUCT INSERTED>>", product_json_object['asin'])
                 self.EXECUTION_OBJ.updated_at = datetime.now()
                 self.EXECUTION_OBJ.save()
-            print("SLEEPING FOR 1 seconds")
-            time.sleep(1)
-
+                asin_success = True
+        except:
+            USE_DELAY = True 
         
-
+        if asin_success is True: 
+            return asin, USE_DELAY, refillIn
+        else:
+            return None, USE_DELAY, refillIn
 

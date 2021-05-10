@@ -1,6 +1,14 @@
 from django import template
+from dashboard.data_connect import DATABASE as mongo
 
 register = template.Library()
+
+
+MONGOOBJ = mongo()
+
+@register.filter(name='getDataCount')
+def getDataCount(value):
+    return MONGOOBJ.product_col.find({'execution_node_id': str(value)}).count()
 
 @register.filter(name='private')
 def private(value):

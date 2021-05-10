@@ -15,7 +15,7 @@ class dashboardView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
-        context['recent_process']= processExecutions.objects.all().order_by('-id')[:100]
+        context['recent_process']= processExecutions.objects.all().order_by('-id')
         return context
 
     def form_valid(self, form):

@@ -32,6 +32,8 @@ class manageCrons:
                 p = Process(target=executeThread, args=(row,))
                 p.start()
                 break
+        else:
+            print("EXISITNG PROCESS IS RUNNING")
 
     
     def checkIfAnyProcessRunning(self):

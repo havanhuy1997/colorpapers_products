@@ -1,4 +1,5 @@
 
+{% load load_mongo_id %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -66,6 +67,7 @@
                   <th>Started At</th>
                   <th>Completed At</th>
                   <th>status</th>
+                  <th>Data Count</th>
                   <th>Action</th>
 
                 </tr>
@@ -80,6 +82,7 @@
                   <td>{{row.start_time}}</td>
                   <td>{{row.completed_at}}</td>
                   <td>{{row.status}}</td>
+                  <td>{{row.node_id|getDataCount}}</td>
                   <td>
                       <a href="/products-data/?node_key={{row.node_id}}">
                           <button class="btn btn-info btn-sm">View Data</button>

@@ -51,6 +51,13 @@ class processExecutions(models.Model):
         default='pending'
     )
     
+    status = models.CharField(
+        _('Execution Status'),
+        max_length=50,
+        help_text=_("Text Choice Field, 50, Characters."),
+        choices=_STATUS_CHOICES,
+        default='pending'
+    )    
     created_at = models.DateTimeField(
         _('Created At'),
         auto_now_add=True,
