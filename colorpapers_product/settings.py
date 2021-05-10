@@ -131,5 +131,5 @@ KEEPA_KEY = "8da4mst49dao49tl4775b781sd0o2p22u7i780iv82dd56qo0o8b72d4j4vepafe"
 PER_PAGE_RECORD_LIMIT = 100
 KEEPA_API_PREFIX = """https://api.keepa.com/query?key={}&domain={}&selection={}"""
 KEEPA_API = """https://api.keepa.com"""
-DOMAIN_MARKET = 10 # india Reference [ 1: com | 2: co.uk 26 | 3: de | 4: fr | 5: co.jp | 6: ca | 8: it | 9: es | 10: in | 11: com.mx ]
+DOMAIN_MARKET = 1 # india Reference [ 1: com | 2: co.uk 26 | 3: de | 4: fr | 5: co.jp | 6: ca | 8: it | 9: es | 10: in | 11: com.mx ]
 VIEW_PAGE_LIMIT = 200

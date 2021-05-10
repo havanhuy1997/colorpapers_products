@@ -10,10 +10,10 @@ import threading
 from multiprocessing import Process
 
 
-def executeThread(row):
-    print("THREAD STARTED>>>")
-    obj = KEEPA_QUERIES()
-    obj.executeNode(row)
+# def executeThread(row):
+#     print("THREAD STARTED>>>")
+#     obj = KEEPA_QUERIES()
+#     obj.executeNode(row)
 
 
 class manageCrons:
@@ -29,8 +29,10 @@ class manageCrons:
             for row in row_to_process:
                 row.status='running'
                 row.save()
-                p = Process(target=executeThread, args=(row,))
-                p.start()
+                obj = KEEPA_QUERIES()
+                obj.executeNode(row)
+                # p = Process(target=executeThread, args=(row,))
+                # p.start()
                 break
         else:
             print("EXISITNG PROCESS IS RUNNING")
