@@ -49,7 +49,7 @@ class KEEPA_QUERIES:
             total_page_to_range = int(self.PRODUCT_SIZE_LIMIT/self.PER_PAGE_LIMIT)+1
             for i in range(1, total_page_to_range+1):
                 generateRowDict = self.loadDataDict(node_id, catag_type, i)
-                self.fetchData(initialRowDict)
+                self.fetchData(generateRowDict)
                 # print("SLEEPING FOR 2 minutes")
                 # time.sleep(180)
         self.EXECUTION_OBJ.completed_at = datetime.now()
