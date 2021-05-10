@@ -98,7 +98,8 @@ class KEEPA_QUERIES:
                 for i in range(refillIn):
                     print("RE-START PRODUCTS IN ", str(refillIn-i), " Seconds")    
                     time.sleep(1)
-                asinList.append(asin)      
+                if asin not in asinList:
+                    asinList.append(asin)      
         
     def getAsinProducts(self, asin):
         url = settings.KEEPA_API+"/product?key={}&domain={}&asin={}".format(self.DATA_KEY, self.TARGET_MARKET, asin)
