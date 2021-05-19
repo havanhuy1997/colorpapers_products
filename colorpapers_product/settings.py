@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-xoc#+545#*qyn=9f)&khl8l-kqf0ar8rfof!(y@4b*gq_q=mi0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['139.59.30.183']
 
 
 # Application definition
@@ -79,9 +79,17 @@ WSGI_APPLICATION = 'colorpapers_product.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'colorpaper',
+        'USER': 'color',
+        'PASSWORD': 'c0l0rP@per$@048RDB',
+        'HOST': 'localhost',
+        'PORT': '',
     }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+    #}
 }
 
 
@@ -122,6 +130,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
